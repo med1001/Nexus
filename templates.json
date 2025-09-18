@@ -1,0 +1,174 @@
+[
+  {
+    "type": "sensor",
+    "version": 1,
+    "title": "Configuration — Capteur",
+    "description": "Paramètres d'un capteur (mesure périodique).",
+    "fields": [
+      {
+        "id": "name",
+        "label": "Nom du capteur",
+        "type": "string",
+        "required": true,
+        "placeholder": "Ex: Température salle A",
+        "help": "Nom lisible utilisé dans l'interface et les rapports."
+      },
+      {
+        "id": "model",
+        "label": "Modèle",
+        "type": "string",
+        "required": true,
+        "placeholder": "Ex: SHT31",
+        "help": "Référence matérielle du capteur."
+      },
+      {
+        "id": "rate",
+        "label": "Fréquence (Hz)",
+        "type": "int",
+        "min": 1,
+        "max": 3600,
+        "step": 1,
+        "default": 10,
+        "required": true,
+        "help": "Fréquence d'échantillonnage en hertz."
+      },
+      {
+        "id": "unit",
+        "label": "Unité",
+        "type": "string",
+        "default": "°C",
+        "required": true,
+        "options": ["°C","°F","%","m/s","Pa","lux"],
+        "help": "Unité physique mesurée par le capteur."
+      },
+      {
+        "id": "precision",
+        "label": "Précision (décimales)",
+        "type": "int",
+        "min": 0,
+        "max": 6,
+        "default": 2,
+        "help": "Nombre de décimales affichées."
+      },
+      {
+        "id": "enabled",
+        "label": "Activé",
+        "type": "bool",
+        "default": true,
+        "help": "Si désactivé, le capteur n'est pas interrogé."
+      },
+      {
+        "id": "tags",
+        "label": "Étiquettes",
+        "type": "string",
+        "placeholder": "séparez par des virgules",
+        "help": "Mots-clés pour filtrage/organisation, ex: 'salle,sol,production'"
+      }
+    ]
+  },
+
+  {
+    "type": "device",
+    "version": 1,
+    "title": "Configuration — Appareil",
+    "description": "Paramètres d'un appareil réseau/edge.",
+    "fields": [
+      {
+        "id": "name",
+        "label": "Nom de l'appareil",
+        "type": "string",
+        "required": true,
+        "placeholder": "Ex: Gateway-01",
+        "help": "Nom lisible pour l'appareil."
+      },
+      {
+        "id": "hostname",
+        "label": "Hôte / IP",
+        "type": "string",
+        "required": true,
+        "placeholder": "192.168.1.10 ou gateway.local",
+        "help": "Adresse réseau ou nom mDNS."
+      },
+      {
+        "id": "port",
+        "label": "Port",
+        "type": "int",
+        "min": 1,
+        "max": 65535,
+        "default": 1883,
+        "help": "Port de service (ex: MQTT 1883)."
+      },
+      {
+        "id": "protocol",
+        "label": "Protocole",
+        "type": "string",
+        "required": true,
+        "options": ["mqtt", "http", "coap", "custom"],
+        "default": "mqtt",
+        "help": "Protocole utilisé pour communiquer avec l'appareil."
+      },
+      {
+        "id": "authType",
+        "label": "Authentification",
+        "type": "string",
+        "options": ["none","basic","token","tls"],
+        "default": "none",
+        "help": "Type d'authentification requis."
+      },
+      {
+        "id": "timeout",
+        "label": "Timeout (ms)",
+        "type": "int",
+        "min": 100,
+        "max": 60000,
+        "default": 5000,
+        "help": "Délai d'attente pour les requêtes réseau."
+      }
+    ]
+  },
+
+  {
+    "type": "gateway",
+    "version": 1,
+    "title": "Configuration — Passerelle",
+    "description": "Regroupe plusieurs devices et options de transmission.",
+    "fields": [
+      {
+        "id": "name",
+        "label": "Nom passerelle",
+        "type": "string",
+        "required": true,
+        "placeholder": "Ex: GW-Paris-01"
+      },
+      {
+        "id": "location",
+        "label": "Localisation",
+        "type": "string",
+        "placeholder": "Ex: Bâtiment A - RDC",
+        "help": "Localisation physique (utile pour carto)."
+      },
+      {
+        "id": "uploadInterval",
+        "label": "Intervalle upload (s)",
+        "type": "int",
+        "min": 10,
+        "max": 86400,
+        "default": 60,
+        "help": "Fréquence d'envoi des paquets vers le serveur."
+      },
+      {
+        "id": "backupEnabled",
+        "label": "Sauvegarde locale",
+        "type": "bool",
+        "default": true,
+        "help": "Activer stockage local en cas de perte réseau."
+      },
+      {
+        "id": "notes",
+        "label": "Notes / commentaires",
+        "type": "string",
+        "placeholder": "Informations libres"
+      }
+    ]
+  }
+]
