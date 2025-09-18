@@ -487,23 +487,25 @@ ApplicationWindow {
                                         wrapMode: Text.NoWrap
                                     }
                                     Text {
+                                        id: dataPreview
                                         color: "gray"
                                         font.pixelSize: 12
                                         text: {
-                                            var s = ""
+                                            // Create a compact preview: first N chars of the pretty JSON or raw string
+                                            var preview = ""
                                             try {
                                                 var obj = JSON.parse(model.data)
-                                                var first = true
-                                                for (var k in obj) {
-                                                    if (!first) s += "  •  "
-                                                    s += k + ": " + String(obj[k])
-                                                    first = false
-                                                }
-                                                if (s.length === 0) s = "(vide)"
+                                                // pretty print but keep it on one line by removing newlines
+                                                preview = JSON.stringify(obj)
                                             } catch (e) {
-                                                s = "(données non valides)"
+                                                preview = model.data ? String(model.data) : "(vide)"
                                             }
-                                            return s
+                                            // limit preview length
+                                            var max = 160
+                                            if (preview.length > max) {
+                                                return preview.substr(0, max) + "…"
+                                            }
+                                            return preview
                                         }
                                         elide: Text.ElideRight
                                         wrapMode: Text.NoWrap
@@ -536,6 +538,34 @@ ApplicationWindow {
                                             deleteIndex = index
                                             confirmDialog.confirmText = "Voulez-vous vraiment supprimer \"" + model.name + "\" ?"
                                             confirmDialog.open()
+                                        }
+                                    }
+                                    //details Button
+                                    Button {
+                                        implicitHeight: 40
+                                        implicitWidth: 40
+                                        padding: 0
+                                        background: Rectangle {
+                                            color: highlightColor
+                                            radius: width / 2
+                                        }
+                                        contentItem: Text {
+                                            text: "⋯"  // Using a different ellipsis character that works better
+                                            font.pixelSize: 22
+                                            color: "white"
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                            anchors.centerIn: parent
+                                        }
+
+                                        onClicked: {
+                                            try {
+                                                var parsed = model.data && model.data.length ? JSON.parse(model.data) : {}
+                                                dataViewDialog.jsonText = JSON.stringify(parsed, null, 2)
+                                            } catch(e) {
+                                                dataViewDialog.jsonText = model.data ? String(model.data) : "(données non disponibles)"
+                                            }
+                                            dataViewDialog.open()
                                         }
                                     }
                                 }
@@ -1138,6 +1168,67 @@ ApplicationWindow {
                 color: subtleTextColor
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
+            }
+        }
+    }
+
+    Dialog {
+        id: dataViewDialog
+        modal: true
+        title: "Détails de la configuration"
+        standardButtons: Dialog.Close
+        width: Math.min(window.width * 0.8, 900)
+        height: Math.min(window.height * 0.8, 700)
+        Material.background: cardColor
+        Material.foreground: textColor
+        Material.elevation: 10
+
+        property string jsonText: ""
+
+        contentItem: ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 12
+            spacing: 8
+
+            Label {
+                text: "Contenu JSON"
+                font.pixelSize: 16
+                font.bold: true
+                color: textColor
+            }
+
+            // Scrollable, selectable, monospace text area for readability
+            TextArea {
+                id: dataViewArea
+                text: dataViewDialog.jsonText
+                readOnly: true
+                wrapMode: Text.WrapAnywhere
+                selectByMouse: true
+                font.family: "monospace"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                // ensure textArea updates when jsonText changes
+                onTextChanged: { /* no-op; keeps UI responsive */ }
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 8
+                Button {
+                    text: "Copier"
+                    onClicked: {
+                        // copy to clipboard if available
+                        Qt.callLater(function() {
+                            Qt.application.clipboard.clear()
+                            Qt.application.clipboard.setText(dataViewDialog.jsonText || "")
+                        })
+                    }
+                }
+                Item { Layout.fillWidth: true }
+                Button {
+                    text: "Fermer"
+                    onClicked: dataViewDialog.close()
+                }
             }
         }
     }
