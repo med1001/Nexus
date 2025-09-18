@@ -467,19 +467,24 @@ ApplicationWindow {
                                 anchors.margins: 12
                                 spacing: 12
 
+                                // Left column: take remaining space, don't use a fixed pixel width
                                 ColumnLayout {
-                                    width: 420
+                                    Layout.fillWidth: true    // <-- use available space
+                                    Layout.preferredWidth: 0  // <-- helps RowLayout distribute space correctly
                                     spacing: 2
+
                                     Text {
                                         text: "ID: " + model.id + "   (" + model.type + ")"
                                         color: "lightgray"
                                         font.pixelSize: 12
+                                        elide: Text.ElideRight
                                     }
                                     Text {
                                         text: model.name
                                         color: "white"
                                         font { pixelSize: 18; bold: true }
                                         elide: Text.ElideRight
+                                        wrapMode: Text.NoWrap
                                     }
                                     Text {
                                         color: "gray"
@@ -500,26 +505,38 @@ ApplicationWindow {
                                             }
                                             return s
                                         }
+                                        elide: Text.ElideRight
+                                        wrapMode: Text.NoWrap
                                     }
                                 }
 
-                                Item { Layout.fillWidth: true }
+                                // spacer to push buttons to the right
+                                Item { Layout.preferredWidth: 8 }
 
-                                Button {
-                                    text: "✏️ Modifier"
-                                    enabled: index >= 0
-                                    onClicked: {
-                                        editDialog.openFor(index, model.type, model.name, model.data)
+                                // Buttons group - keep them compact and give each a minimum width
+                                RowLayout {
+                                    spacing: 8
+                                    Layout.alignment: Qt.AlignVCenter
+                                    // Edit button
+                                    Button {
+                                        text: "✏️ Modifier"
+                                        enabled: index >= 0
+                                        implicitHeight: 36
+                                        Layout.minimumWidth: 96
+                                        onClicked: editDialog.openFor(index, model.type, model.name, model.data)
                                     }
-                                }
 
-                                Button {
-                                    text: "🗑 Supprimer"
-                                    Material.background: dangerColor
-                                    onClicked: {
-                                        deleteIndex = index
-                                        confirmDialog.confirmText = "Voulez-vous vraiment supprimer \"" + model.name + "\" ?"
-                                        confirmDialog.open()
+                                    // Delete button
+                                    Button {
+                                        text: "🗑 Supprimer"
+                                        Material.background: dangerColor
+                                        implicitHeight: 36
+                                        Layout.minimumWidth: 96
+                                        onClicked: {
+                                            deleteIndex = index
+                                            confirmDialog.confirmText = "Voulez-vous vraiment supprimer \"" + model.name + "\" ?"
+                                            confirmDialog.open()
+                                        }
                                     }
                                 }
                             }
