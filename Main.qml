@@ -265,77 +265,84 @@ ApplicationWindow {
                 }
             }
 
-            // Carte de filtres (dynamic)
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 180
-                radius: 12
-                color: cardColor
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 16
-                    spacing: 12
-
-                    Label {
-                        text: "Filtres"
-                        font.pixelSize: 16
-                        font.bold: true
-                        color: textColor
-                    }
-
-                    Column {
-                        width: parent.width
-                        spacing: 8
-
-                        // Dynamic list of types (one checkbox per type)
-                        Repeater {
-                            model: availableTypes
-                            delegate: CheckBox {
-                                id: typeCheck
-                                text: modelData
-                                checked: selectedTypes.indexOf(modelData) !== -1
-                                onCheckedChanged: {
-                                    if (checked) {
-                                        // add (assign new array to trigger bindings)
-                                        selectedTypes = selectedTypes.concat([modelData])
-                                    } else {
-                                        // remove (assign new array)
-                                        selectedTypes = selectedTypes.filter(function(x) { return x !== modelData })
-                                    }
-                                    applyFilters()
-                                }
+// Carte de filtres (dynamic)
+Rectangle {
+    Layout.fillWidth: true
+    Layout.minimumHeight: 180  // Minimum height
+    Layout.maximumHeight: 400  // Maximum height before scrolling
+    Layout.preferredHeight: Math.min(180 + (availableTypes.length * 30), 400) // Dynamic height
+    radius: 12
+    color: cardColor
+    
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 16
+        spacing: 12
+        
+        Label {
+            text: "Filtres"
+            font.pixelSize: 16
+            font.bold: true
+            color: textColor
+        }
+        
+        // Scrollable area for filters
+        ScrollView {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            clip: true
+            
+            Column {
+                width: parent.width
+                spacing: 8
+                
+                // Dynamic list of types (one checkbox per type)
+                Repeater {
+                    model: availableTypes
+                    delegate: CheckBox {
+                        id: typeCheck
+                        text: modelData
+                        checked: selectedTypes.indexOf(modelData) !== -1
+                        onCheckedChanged: {
+                            if (checked) {
+                                selectedTypes = selectedTypes.concat([modelData])
+                            } else {
+                                selectedTypes = selectedTypes.filter(function(x) { return x !== modelData })
                             }
-                        }
-
-                        Label {
-                            visible: availableTypes.length === 0
-                            text: "(Aucun type trouvé)"
-                            color: subtleTextColor
-                        }
-                    }
-
-                    Item { Layout.fillHeight: true }
-
-                    Button {
-                        text: "Réinitialiser les filtres"
-                        Layout.fillWidth: true
-                        flat: true
-                        onClicked: {
-                            // Re-query types (in case new configs were added)
-                            suppressModelReload = true
-                            reloadTypes()
-                            // ensure all are selected
-                            selectedTypes = []
-                            for (var i=0;i<availableTypes.length;++i) selectedTypes = selectedTypes.concat([availableTypes[i]])
-                            searchField.text = ""
-                            currentSearchText = ""
                             applyFilters()
-                            suppressModelReload = false
                         }
                     }
                 }
+                Label {
+                    visible: availableTypes.length === 0
+                    text: "(Aucun type trouvé)"
+                    color: subtleTextColor
+                }
             }
+        }
+        
+        Button {
+            text: "Réinitialiser les filtres"
+            Layout.fillWidth: true
+            flat: true
+            onClicked: {
+                suppressModelReload = true
+                reloadTypes()
+                selectedTypes = []
+                for (var i=0;i<availableTypes.length;++i)
+                    selectedTypes = selectedTypes.concat([availableTypes[i]])
+                searchField.text = ""
+                currentSearchText = ""
+                applyFilters()
+                suppressModelReload = false
+            }
+        }
+    }
+}
+
+
+
+
 
             // Accès rapide aux modèles
             Rectangle {
