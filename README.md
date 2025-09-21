@@ -4,7 +4,7 @@ A modern Qt application for managing and organizing equipment configurations wit
 
 ![Qt](https://img.shields.io/badge/Qt-6.8+-green.svg)
 ![C++](https://img.shields.io/badge/C%2B%2B-17-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-GPL%20v3.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)
 
 ## ✨ Features
@@ -160,6 +160,8 @@ For detailed development information, see the [Developer Documentation](docs/dev
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
+By contributing to this project, you agree that your contributions will be licensed under the GNU General Public License v3.0.
+
 ### Development Setup
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -176,7 +178,11 @@ If you encounter any problems:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 ## 🙏 Acknowledgments
 
