@@ -1,4 +1,4 @@
-# Configuration Manager
+# Nexus
 
 A modern Qt application for managing and organizing equipment configurations with an intuitive template-based system.
 
