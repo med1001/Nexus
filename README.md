@@ -60,18 +60,61 @@ A modern Qt application for managing and organizing equipment configurations wit
 3. The application will create a local database on first launch
 
 #### Option 2: Build from Source
+
+**Linux / macOS (bash)**
+
 ```bash
 # Clone the repository
 git clone https://github.com/med1001/Nexus.git
-cd configuration-manager
+cd Nexus
 
-# Build with CMake
-cmake -B build -S .
+# Clean previous build state
+rm -rf build
+
+# Configure (use the path to your Qt6 CMake files)
+cmake -B build -S . -G Ninja -DCMAKE_PREFIX_PATH="/path/to/Qt/6.x.x/<toolchain>/lib/cmake/Qt6"
+
+# Build
 cmake --build build
 
-# Run the application
-./build/configurationManager
+# Run
+./build/appconfigurationManager
 ```
+
+> Set `/path/to/Qt/6.x.x/<toolchain>` to the Qt installation that contains `Qt6Config.cmake` (the directory that contains `lib/cmake/Qt6`).
+
+---
+
+**Windows (PowerShell) — MinGW + Ninja (as used for this project)**
+
+```powershell
+# Clone the repository
+git clone https://github.com/med1001/Nexus.git
+Set-Location .\Nexus
+
+# Add MinGW compiler & Ninja to PATH for this session
+$env:Path += ";C:\Qt\Tools\mingw1310_64\bin;C:\Qt\Tools\Ninja"
+
+# Remove any previous build to avoid generator conflicts
+Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
+
+# Configure CMake (point to the Qt6 CMake files)
+cmake -B build -G "Ninja" -S . -DCMAKE_PREFIX_PATH="C:\Qt\6.9.1\mingw_64\lib\cmake\Qt6"
+
+# Build
+cmake --build build
+
+# Ensure Qt runtime DLLs and plugins are available for the running process
+$env:Path += ";C:\Qt\6.9.1\mingw_64\bin"
+$env:QT_PLUGIN_PATH = "C:\Qt\6.9.1\mingw_64\plugins"
+
+# Run the application
+Set-Location .\build
+.\appconfigurationManager.exe
+```
+
+If the executable exits immediately, ensure the `Path` and `QT_PLUGIN_PATH` lines above are executed in the same session before launching; they allow the app to find Qt DLLs and the `platforms` plugin (e.g., `qwindows.dll`).
+
 
 ## 🎯 Basic Usage
 
