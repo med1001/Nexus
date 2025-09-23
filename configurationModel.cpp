@@ -1,4 +1,4 @@
-#include "ConfigurationModel.h"
+#include "configurationModel.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>

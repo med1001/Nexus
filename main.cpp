@@ -7,8 +7,8 @@
 #include <QDebug>
 #include <QSqlError>
 
-#include "ConfigurationModel.h"
-#include "TemplateManager.h"
+#include "configurationModel.h"
+#include "templateManager.h"
 
 int main(int argc, char *argv[])
 {

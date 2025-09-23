@@ -1,4 +1,4 @@
-#include "TemplateManager.h"
+#include "templateManager.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
