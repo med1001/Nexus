@@ -21,12 +21,12 @@ qt_standard_project_setup(REQUIRES 6.8)
 # Add executable sources
 qt_add_executable(appconfigurationManager
     main.cpp
-    Configuration.cpp
-    ConfigurationModel.cpp
-    TemplateManager.cpp
-    Configuration.h
-    ConfigurationModel.h
-    TemplateManager.h
+    configuration.cpp
+    configurationModel.cpp
+    templateManager.cpp
+    configuration.h
+    configurationModel.h
+    templateManager.h
 )
 
 # ------------------------------------------------------------------

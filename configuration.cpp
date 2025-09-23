@@ -1,5 +1,5 @@
 // Configuration.cpp
-#include "Configuration.h"
+#include "configuration.h"
 
 Configuration::Configuration(QObject *parent) : QObject(parent), m_param(0) {}
 
