@@ -203,9 +203,9 @@ For detailed development information, see the [Developer Documentation](docs/dev
 
 ## 📚 Documentation
 
-- **[User Manual](docs/user-manual.md)** - Complete usage guide
-- **[Developer Documentation](docs/developer-documentation.md)** - Technical details and API reference
-- **[Template System Guide](docs/user-manual.md#template-system)** - How to customize templates
+- **[User Manual](documentation/nexus_user_manual.md)** - Complete usage guide
+- **[Developer Documentation](documentation/nexus_dev_docs.md)** - Technical details and API reference
+- **[Template System Guide](documentation/template_system_guide.md)** - How to customize templates
 
 ## 🤝 Contributing
 
