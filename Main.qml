@@ -387,16 +387,22 @@ Rectangle {
                                 elide: Text.ElideRight
                             }
 
-                            MouseArea {
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    addDialog.templateName = modelData
-                                    addDialog.template = JSON.parse(JSON.stringify(templateManager.getTemplate(modelData)))
-                                    addDialog.prepareNew()
-                                    addDialog.open()
-                                }
-                            }
+MouseArea {
+    anchors.fill: parent
+    cursorShape: Qt.PointingHandCursor
+    onClicked: {
+        addDialog.programmaticTplChange = true
+        // force la sélection du ComboBox sur l'élément cliqué
+        var idx = templateManager.templates().indexOf(modelData)
+        if (idx !== -1) tplCombo.currentIndex = idx
+
+        addDialog.templateName = modelData
+        addDialog.template = JSON.parse(JSON.stringify(templateManager.getTemplate(modelData)))
+        addDialog.prepareNew()
+        addDialog.open()
+    }
+}
+
                         }
                     }
                 }
@@ -596,6 +602,7 @@ Rectangle {
     // Dialogue d'ajout de configuration
     Dialog {
         id: addDialog
+        property bool programmaticTplChange: false 
         modal: true
         width: 600
         height: 700
@@ -733,23 +740,33 @@ Rectangle {
                     font.bold: true
                     Layout.preferredWidth: 80
                 }
-                ComboBox {
-                    id: tplCombo
-                    model: templateManager.templates()
-                    Layout.fillWidth: true
-                    // use currentText change to be robust with programmatic changes
-                    onCurrentTextChanged: {
-                        addDialog.templateName = currentText
-                        addDialog.template = JSON.parse(JSON.stringify(templateManager.getTemplate(addDialog.templateName)))
-                        addDialog.prepareNew()
-                    }
-                    Component.onCompleted: {
-                        if (model.length > 0) {
-                            addDialog.templateName = model[0]
-                            addDialog.template = JSON.parse(JSON.stringify(templateManager.getTemplate(addDialog.templateName)))
-                        }
-                    }
-                }
+ComboBox {
+    id: tplCombo
+    model: templateManager.templates()
+    Layout.fillWidth: true
+
+    onCurrentTextChanged: {
+        if (addDialog.programmaticTplChange) {
+            // changement déclenché depuis le code : on l'ignore
+            addDialog.programmaticTplChange = false
+            return
+        }
+        // changement initié par l'utilisateur
+        addDialog.templateName = currentText
+        addDialog.template = JSON.parse(JSON.stringify(templateManager.getTemplate(addDialog.templateName)))
+        addDialog.prepareNew()
+    }
+
+    Component.onCompleted: {
+        // ne pas forcer addDialog.templateName ici — laisse le contrôle aux actions
+        // ou initialise proprement si tu veux un défaut :
+        if (model.length > 0 && addDialog.templateName === "") {
+            addDialog.programmaticTplChange = true
+            currentIndex = 0
+        }
+    }
+}
+
             }
 
             TextField {
